@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Progress Tracker - Track Your Learning Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #38a169, #2d7d4f);
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(56, 161, 105, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(56, 161, 105, 0.6);
+        }
+
+        .section {
+            padding: 80px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: #4c51bf;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #4c51bf;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4c51bf;
+            margin-bottom: 10px;
+        }
+
+        .how-it-works {
+            background: #f8fafc;
+            padding: 80px 0;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #4c51bf, #667eea);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(76, 81, 191, 0.3);
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            color: #4c51bf;
+            margin-bottom: 10px;
+        }
+
+        .comparison {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .comparison-card {
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .other-tools {
+            background: #fed7d7;
+            border-left: 5px solid #e53e3e;
+        }
+
+        .our-tool {
+            background: #c6f6d5;
+            border-left: 5px solid #38a169;
+        }
+
+        .comparison-title {
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .comparison-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .comparison-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .testimonials {
+            background: linear-gradient(135deg, #edf2f7, #e2e8f0);
+            padding: 80px 0;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .testimonial-quote {
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #4c51bf;
+        }
+
+        .final-cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .final-cta p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.1);
+            padding: 40px 0;
+            margin: 40px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .stat p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>📚 Track Your Learning.<br>Stay Consistent. Grow Every Day.</h1>
+            <p class="hero-subtitle">A lightweight, privacy-first app to log your study sessions, track streaks, and see your progress — all right in your browser.</p>
+            <a href="learning-tracker.html" class="cta-button">👉 Start Tracking for Free</a>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="section">
+        <h2>Why Choose Learning Progress Tracker?</h2>
+        <p style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 20px;">The simplest way to track your learning. No logins, no clutter, just private and powerful learning analytics in your browser.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Daily Dashboard</div>
+                <p>See today's learning hours, streaks, and recent sessions at a glance. Stay motivated with beautiful visual progress indicators.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <div class="feature-title">Flexible Entry Logging</div>
+                <p>Record topic, type (active/passive), time spent, and key takeaways. Capture your learning journey in detail.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <div class="feature-title">Calendar & Stats</div>
+                <p>Visualize progress weekly, monthly, and overall. Interactive calendar shows your learning consistency patterns.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">Table View with Filters</div>
+                <p>Search, filter, edit, and manage your learning history easily. Find any session in seconds.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <div class="feature-title">Export/Import Data</div>
+                <p>Keep backups in Excel, CSV, or PDF anytime. Your data belongs to you, always.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">100% Private</div>
+                <p>Data stays in your browser. No accounts. No servers. No tracking. Your learning journey stays private.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="section">
+            <h2>How It Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>✍️ Add Learning Entry</h3>
+                    <p>Log your study session in seconds. Enter topic, time, and key takeaways.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>📊 Track Progress</h3>
+                    <p>View streaks and insights on your beautiful dashboard. Stay motivated daily.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>📅 Review Journey</h3>
+                    <p>Analyze your learning patterns in calendar and table views. See your growth.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>💾 Backup Anytime</h3>
+                    <p>Export to Excel, CSV, or PDF whenever you want. Your data, your control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison">
+        <div class="section">
+            <h2>Unlike Notion, Evernote, or Google Sheets</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card other-tools">
+                    <div class="comparison-title">🗂️ Other Tools</div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">❌</span>
+                        <span>Complex setup required</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">❌</span>
+                        <span>Account registration needed</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">❌</span>
+                        <span>Data stored on external servers</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">❌</span>
+                        <span>Generic productivity tools</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">❌</span>
+                        <span>Overwhelming features</span>
+                    </div>
+                </div>
+                
+                <div class="comparison-card our-tool">
+                    <div class="comparison-title">🎯 Learning Progress Tracker</div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">✅</span>
+                        <span>Ready in seconds</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">✅</span>
+                        <span>No accounts needed</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">✅</span>
+                        <span>Data stays with you</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">✅</span>
+                        <span>Built specifically for learners</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-icon">✅</span>
+                        <span>Simple and focused</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Made for You Section -->
+    <section class="section">
+        <h2>Made for Learners Like You</h2>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">Whether you're cramming for exams or building daily learning habits, this tracker adapts to your journey.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; text-align: left;">
+                <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); border-left: 4px solid #4c51bf;">
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #4c51bf; margin-bottom: 8px;">🎓 Students</div>
+                    <p style="color: #666;">Preparing for exams (UPSC, JEE, NEET, boards) and need to track study hours across subjects</p>
+                </div>
+                
+                <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); border-left: 4px solid #667eea;">
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #4c51bf; margin-bottom: 8px;">💻 Developers</div>
+                    <p style="color: #666;">Practicing coding daily, learning new frameworks, and building consistent programming habits</p>
+                </div>
+                
+                <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); border-left: 4px solid #38a169;">
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #4c51bf; margin-bottom: 8px;">🌍 Language Learners</div>
+                    <p style="color: #666;">Building consistency in language practice and tracking progress across speaking, reading, writing</p>
+                </div>
+                
+                <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); border-left: 4px solid #764ba2;">
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #4c51bf; margin-bottom: 8px;">📖 Professionals</div>
+                    <p style="color: #666;">Mastering new skills for career growth and need to track learning ROI and progress</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="section">
+            <h2>What Learners Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p class="testimonial-quote">"I've finally kept a 30-day streak for my coding practice thanks to this app. The daily dashboard keeps me motivated, and I love that my data stays private."</p>
+                    <div class="testimonial-author">– Sarah, Web Developer</div>
+                </div>
+                
+                <div class="testimonial">
+                    <p class="testimonial-quote">"Perfect for UPSC prep. Simple, private, and effective. I can track all my subjects and see exactly where I'm spending my time. The export feature is a lifesaver."</p>
+                    <div class="testimonial-author">– Rahul, Civil Services Aspirant</div>
+                </div>
+                
+                <div class="testimonial">
+                    <p class="testimonial-quote">"As a language learner, this app helps me stay consistent with my daily practice. The streak feature is incredibly motivating, and I love reviewing my progress."</p>
+                    <div class="testimonial-author">– Maria, Language Student</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="section">
+            <h2>✨ Don't just study — track your growth. Your future self will thank you.</h2>
+            <p>Join thousands of learners who are building consistent study habits and tracking their progress with our simple, privacy-first app.</p>
+            
+            <div class="stats">
+                <div class="stats-grid">
+                    <div class="stat">
+                        <h3>0</h3>
+                        <p>Setup Time Required</p>
+                    </div>
+                    <div class="stat">
+                        <h3>100%</h3>
+                        <p>Data Privacy</p>
+                    </div>
+                    <div class="stat">
+                        <h3>∞</h3>
+                        <p>Learning Entries</p>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="learning-tracker.html" class="cta-button">👉 Start Tracking for Free</a>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">No signup required • Works in any browser • 100% free forever</p>
+        </div>
+    </section>
+</body>
+</html>

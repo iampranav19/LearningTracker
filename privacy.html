@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Learning Progress Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #4c51bf;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #4c51bf, #667eea);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 81, 191, 0.4);
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 81, 191, 0.6);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            line-height: 1.6;
+        }
+
+        .privacy-hero {
+            background: #e6fffa;
+            border-left: 4px solid #38a169;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .privacy-hero h2 {
+            color: #2d7d4f;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .section {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            color: #4c51bf;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .section ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+
+        .highlight-box h3 {
+            color: #d68910;
+            margin-bottom: 15px;
+        }
+
+        .security-badge {
+            background: linear-gradient(135deg, #38a169, #2d7d4f);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .security-badge h4 {
+            margin-bottom: 5px;
+        }
+
+        .privacy-guarantee {
+            background: #edf2f7;
+            border: 2px solid #4c51bf;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .privacy-guarantee h3 {
+            color: #4c51bf;
+            margin-bottom: 15px;
+        }
+
+        .data-flow {
+            background: white;
+            border: 2px dashed #4c51bf;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .data-flow h4 {
+            color: #4c51bf;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="javascript:history.back()" class="back-btn">← Back to App</a>
+        
+        <div class="header">
+            <h1>Privacy Policy</h1>
+            <p>Your data, your control, your privacy</p>
+        </div>
+
+        <div class="content">
+            <div class="privacy-hero">
+                <h2>🔒 Your Privacy is Our Priority</h2>
+                <p>This Learning Progress Tracker is designed with privacy at its core. Your personal learning data never leaves your device. We believe in complete transparency about how your data is handled.</p>
+            </div>
+
+            <div class="security-badge">
+                <h4>🛡️ 100% LOCAL STORAGE</h4>
+                <p>No servers, no cloud, no external transmission</p>
+            </div>
+
+            <div class="section">
+                <h3>📱 How Your Data is Stored</h3>
+                
+                <div class="data-flow">
+                    <h4>Your Learning Entries</h4>
+                    <p>Stored locally in your browser's localStorage</p>
+                </div>
+
+                <p><strong>What we store locally:</strong></p>
+                <ul>
+                    <li>Learning entry dates and topics</li>
+                    <li>Time spent on learning activities</li>
+                    <li>Learning type (Active/Passive)</li>
+                    <li>Your learning descriptions and notes</li>
+                    <li>Key takeaways you've written</li>
+                </ul>
+
+                <p style="margin-top: 15px;"><strong>Where it's stored:</strong> All data uses your browser's localStorage feature, which means it stays on your device only and is never transmitted anywhere.</p>
+
+                <p style="margin-top: 15px;"><strong>Storage location:</strong> The data is stored in your browser's internal storage system, separate from your files and completely private to this application.</p>
+            </div>
+
+            <div class="section">
+                <h3>🚫 What We Don't Collect</h3>
+                <p>We believe in collecting nothing beyond what you explicitly enter. Here's what we definitely do NOT collect:</p>
+                <ul>
+                    <li><strong>Personal Information:</strong> No names, email addresses, or contact details</li>
+                    <li><strong>Device Information:</strong> No IP addresses, device IDs, or hardware information</li>
+                    <li><strong>Location Data:</strong> No GPS coordinates or location tracking</li>
+                    <li><strong>Browsing History:</strong> No tracking of other websites or online behavior</li>
+                    <li><strong>Advertising Data:</strong> No data for ads, marketing, or profiling</li>
+                    <li><strong>Analytics:</strong> No usage statistics, click tracking, or behavioral data</li>
+                    <li><strong>Cookies:</strong> No tracking cookies or third-party cookies</li>
+                    <li><strong>Account Data:</strong> No registration, passwords, or login information</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h3>🔐 Data Security Measures</h3>
+                
+                <div class="security-badge">
+                    <h4>🏠 Browser-Level Security</h4>
+                    <p>Protected by your browser's built-in security features</p>
+                </div>
+
+                <ul>
+                    <li><strong>No Network Transmission:</strong> Data never travels over the internet</li>
+                    <li><strong>Same-Origin Policy:</strong> Data is isolated to this application only</li>
+                    <li><strong>Browser Sandbox:</strong> Protected by browser security boundaries</li>
+                    <li><strong>No Server Vulnerabilities:</strong> No external servers means no server breaches</li>
+                    <li><strong>User-Controlled:</strong> You control when data is exported or deleted</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h3>📤 Export & Import Privacy</h3>
+                
+                <div class="data-flow">
+                    <h4>Export Process</h4>
+                    <p>Files created locally → Downloaded to your device</p>
+                </div>
+
+                <div class="data-flow">
+                    <h4>Import Process</h4>
+                    <p>Your files uploaded → Processed locally → Stored in browser</p>
+                </div>
+
+                <p><strong>Export functionality:</strong> When you export data to Excel, CSV, or PDF, files are created entirely within your browser and downloaded directly to your device. No external processing occurs.</p>
+
+                <p style="margin-top: 15px;"><strong>Import functionality:</strong> When importing data, files are read and processed entirely within your browser. No data is sent to external servers for processing.</p>
+
+                <p style="margin-top: 15px;"><strong>Your responsibility:</strong> Once you export data, you control what happens to those files. Consider privacy implications before sharing exported learning data with others.</p>
+            </div>
+
+            <div class="section">
+                <h3>🔄 Data Management & Control</h3>
+                <ul>
+                    <li><strong>Data Retention:</strong> Your data persists in your browser until you actively delete it or clear your browser's storage</li>
+                    <li><strong>Easy Deletion:</strong> Use the "Clear All Data" function to permanently remove all entries</li>
+                    <li><strong>Granular Control:</strong> Delete individual entries or all data as needed</li>
+                    <li><strong>No Recovery:</strong> Once deleted, data cannot be recovered (unless you have exports)</li>
+                    <li><strong>Browser Limits:</strong> Subject to your browser's local storage capacity limits</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h3>⚖️ Legal Basis & Rights</h3>
+                <p><strong>No Data Processing:</strong> Since we don't collect or process personal data, traditional data protection regulations don't apply in the usual sense.</p>
+                
+                <p style="margin-top: 15px;"><strong>Your Rights:</strong></p>
+                <ul>
+                    <li>Complete ownership of all your learning data</li>
+                    <li>Right to export your data at any time</li>
+                    <li>Right to delete all data instantly</li>
+                    <li>No restrictions on data portability</li>
+                    <li>No consent required for data we don't collect</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>⚠️ Important Privacy Notes</h3>
+                <ul>
+                    <li><strong>Browser Data Clearing:</strong> If you clear your browser's data/cookies, your learning entries will be deleted</li>
+                    <li><strong>Incognito/Private Mode:</strong> Data may not persist when using private browsing modes</li>
+                    <li><strong>Different Browsers:</strong> Data is separate in each browser you use</li>
+                    <li><strong>Device Changes:</strong> Data doesn't transfer between devices automatically</li>
+                    <li><strong>Regular Backups:</strong> Export your data regularly as a precaution</li>
+                    <li><strong>Shared Computers:</strong> Others using the same browser profile might see your data</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h3>🔄 Privacy Policy Updates</h3>
+                <p><strong>Changes:</strong> This privacy policy may be updated to reflect changes in functionality or to improve clarity.</p>
+                <p style="margin-top: 10px;"><strong>Notification:</strong> Significant changes will be reflected in updated versions of the application.</p>
+                <p style="margin-top: 10px;"><strong>Your Continued Use:</strong> Using the application after updates means you accept any privacy policy changes.</p>
+            </div>
+
+            <div class="privacy-guarantee">
+                <h3>Our Privacy Guarantee</h3>
+                <p><strong>We guarantee that your learning data:</strong></p>
+                <ul style="text-align: left; margin-top: 15px;">
+                    <li>Never leaves your device without your explicit action</li>
+                    <li>Is never shared with third parties</li>
+                    <li>Is never used for advertising or marketing</li>
+                    <li>Is never analyzed by external systems</li>
+                    <li>Remains completely under your control</li>
+                </ul>
+                <p style="margin-top: 20px; font-weight: 600;">Your learning journey is private and personal. We're just here to help you track it.</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background: #edf2f7; border-radius: 10px;">
+                <p style="color: #666; margin-bottom: 10px;"><em>Last updated: September 2025</em></p>
+                <p style="font-weight: 600; color: #4c51bf;">Questions about privacy?</p>
+                <p style="color: #666; margin-top: 5px;">This application runs entirely in your browser with no external connections. Your learning data is yours alone.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

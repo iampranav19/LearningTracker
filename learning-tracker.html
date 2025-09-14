@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Progress Tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .header h1 {
+            text-align: center;
+            color: #4c51bf;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #4c51bf, #667eea);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 81, 191, 0.4);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 81, 191, 0.6);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+        }
+
+        .section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: #4c51bf;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4c51bf;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4c51bf;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4c51bf, #667eea);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 81, 191, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096, #4a5568);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #38a169, #2d7d4f);
+        }
+
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: #edf2f7;
+        }
+
+        .calendar-day.has-entry {
+            background: linear-gradient(135deg, #4c51bf, #667eea);
+            color: white;
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(135deg, #38a169, #2d7d4f);
+            color: white;
+            font-weight: bold;
+        }
+
+        .entries-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .entries-table th,
+        .entries-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .entries-table th {
+            background: linear-gradient(135deg, #4c51bf, #667eea);
+            color: white;
+            font-weight: 600;
+        }
+
+        .entries-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input,
+        .search-bar select {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .file-operations {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .streak-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .streak-flame {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-btn {
+                width: 200px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .file-operations {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Learning Progress Tracker</h1>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('dashboard')">Dashboard</button>
+                <button class="nav-btn" onclick="showSection('add-entry')">Add Entry</button>
+                <button class="nav-btn" onclick="showSection('calendar')">Calendar</button>
+                <button class="nav-btn" onclick="showSection('entries')">View Entries</button>
+                <button class="nav-btn" onclick="showSection('export')">Export/Import</button>
+            </div>
+            <div class="nav-buttons" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.3);">
+                <button class="nav-btn" onclick="openPage('about.html')">About</button>
+                <button class="nav-btn" onclick="openPage('help.html')">Help</button>
+                <button class="nav-btn" onclick="openPage('privacy.html')">Privacy</button>
+                <button class="nav-btn" onclick="openPage('terms.html')">Terms</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section active">
+            <h2>Learning Dashboard</h2>
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3 id="today-hours">0.0</h3>
+                    <p>Hours Today</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="current-streak">0</h3>
+                    <p>Day Streak</p>
+                    <div class="streak-indicator">
+                        <span class="streak-flame">🔥</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3 id="week-hours">0.0</h3>
+                    <p>This Week</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="month-hours">0.0</h3>
+                    <p>This Month</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="total-entries">0</h3>
+                    <p>Total Entries</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="total-hours">0.0</h3>
+                    <p>Total Hours</p>
+                </div>
+            </div>
+            <div id="recent-entries">
+                <h3 style="color: #4c51bf; margin-bottom: 15px;">Recent Entries</h3>
+                <div id="recent-list"></div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Entry Section -->
+        <div id="add-entry" class="section">
+            <h2 id="form-title">Add New Learning Entry</h2>
+            <form id="entry-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entry-date">Date</label>
+                        <input type="date" id="entry-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="entry-topic">Topic/Subject</label>
+                        <input type="text" id="entry-topic" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entry-type">Type of Learning</label>
+                        <select id="entry-type" required>
+                            <option value="">Select Type</option>
+                            <option value="Active">Active Learning</option>
+                            <option value="Passive">Passive Learning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="entry-time">Time Spent (hours)</label>
+                        <input type="number" id="entry-time" step="0.1" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="entry-learned">What I Learned</label>
+                    <textarea id="entry-learned" placeholder="Describe what you learned in this session..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="entry-takeaways">Key Takeaways</label>
+                    <textarea id="entry-takeaways" placeholder="• Key point 1&#10;• Key point 2&#10;• Key point 3"></textarea>
+                </div>
+                <button type="submit" class="btn">Save Entry</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Calendar Section -->
+        <div id="calendar" class="section">
+            <h2>Learning Calendar</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <button class="btn btn-secondary" onclick="previousMonth()">&larr; Previous</button>
+                <h3 id="calendar-month" style="color: #4c51bf;"></h3>
+                <button class="btn btn-secondary" onclick="nextMonth()">Next &rarr;</button>
+            </div>
+            <div class="calendar-container" id="calendar-grid"></div>
+        </div>
+
+        <!-- Entries Section -->
+        <div id="entries" class="section">
+            <h2>Learning Entries</h2>
+            <div class="search-bar">
+                <input type="text" id="search-topic" placeholder="Search by topic...">
+                <select id="filter-type">
+                    <option value="">All Types</option>
+                    <option value="Active">Active Learning</option>
+                    <option value="Passive">Passive Learning</option>
+                </select>
+                <input type="date" id="filter-date" placeholder="Filter by date">
+                <button class="btn" onclick="applyFilters()">Search</button>
+                <button class="btn btn-secondary" onclick="clearFilters()">Clear</button>
+            </div>
+            <table class="entries-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Topic</th>
+                        <th>Type</th>
+                        <th>Time (h)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="entries-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- Export/Import Section -->
+        <div id="export" class="section">
+            <h2>Export & Import</h2>
+            <div class="file-operations">
+                <button class="btn btn-success" onclick="exportToExcel()">📊 Export to Excel</button>
+                <button class="btn btn-success" onclick="exportToCSV()">📄 Export to CSV</button>
+                <button class="btn btn-success" onclick="exportToPDF()">📋 Export to PDF</button>
+            </div>
+            <div class="file-operations">
+                <input type="file" id="import-file" accept=".xlsx,.xls,.csv" style="display: none;" onchange="importData()">
+                <button class="btn" onclick="document.getElementById('import-file').click()">📂 Import Excel/CSV</button>
+                <button class="btn btn-secondary" onclick="clearAllData()">🗑️ Clear All Data</button>
+            </div>
+            <div style="margin-top: 30px; padding: 20px; background: #f7fafc; border-radius: 8px;">
+                <h3 style="color: #4c51bf; margin-bottom: 15px;">File Storage Instructions</h3>
+                <p style="margin-bottom: 10px;">Due to browser security restrictions, this app works with downloaded/uploaded Excel files:</p>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li>Your data is saved locally in your browser</li>
+                    <li>Use "Export to Excel" to download your data as an Excel file</li>
+                    <li>Use "Import Excel/CSV" to upload and restore your data</li>
+                    <li>Keep regular backups by exporting your data</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let learningEntries = [];
+        let currentEditId = null;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setTodayDate();
+            updateDashboard();
+            renderCalendar();
+            renderEntries();
+        });
+
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            // Update content based on section
+            if (sectionId === 'dashboard') {
+                updateDashboard();
+            } else if (sectionId === 'calendar') {
+                renderCalendar();
+            } else if (sectionId === 'entries') {
+                renderEntries();
+            }
+        }
+
+        // Function to open content pages in new tabs
+        function openPage(fileName) {
+            window.open(fileName, '_blank');
+        }
+
+        // Data management
+        function loadData() {
+            const saved = localStorage.getItem('learningEntries');
+            if (saved) {
+                learningEntries = JSON.parse(saved);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('learningEntries', JSON.stringify(learningEntries));
+        }
+
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('entry-date').value = today;
+        }
+
+        // Form handling
+        document.getElementById('entry-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const entry = {
+                id: currentEditId || Date.now(),
+                date: document.getElementById('entry-date').value,
+                topic: document.getElementById('entry-topic').value,
+                type: document.getElementById('entry-type').value,
+                time: parseFloat(document.getElementById('entry-time').value),
+                learned: document.getElementById('entry-learned').value,
+                takeaways: document.getElementById('entry-takeaways').value
+            };
+
+            if (currentEditId) {
+                const index = learningEntries.findIndex(e => e.id === currentEditId);
+                learningEntries[index] = entry;
+                currentEditId = null;
+                document.getElementById('form-title').textContent = 'Add New Learning Entry';
+            } else {
+                learningEntries.push(entry);
+            }
+
+            saveData();
+            this.reset();
+            setTodayDate();
+            updateDashboard();
+            renderEntries();
+            showSection('dashboard');
+            
+            // Refresh active nav button
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.nav-btn').classList.add('active');
+
+            alert('Entry saved successfully!');
+        });
+
+        function editEntry(id) {
+            const entry = learningEntries.find(e => e.id === id);
+            if (entry) {
+                currentEditId = id;
+                document.getElementById('entry-date').value = entry.date;
+                document.getElementById('entry-topic').value = entry.topic;
+                document.getElementById('entry-type').value = entry.type;
+                document.getElementById('entry-time').value = entry.time;
+                document.getElementById('entry-learned').value = entry.learned;
+                document.getElementById('entry-takeaways').value = entry.takeaways;
+                document.getElementById('form-title').textContent = 'Edit Learning Entry';
+                showSection('add-entry');
+                
+                // Update nav button
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.nav-btn')[1].classList.add('active');
+            }
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                learningEntries = learningEntries.filter(e => e.id !== id);
+                saveData();
+                updateDashboard();
+                renderEntries();
+            }
+        }
+
+        function cancelEdit() {
+            currentEditId = null;
+            document.getElementById('entry-form').reset();
+            setTodayDate();
+            document.getElementById('form-title').textContent = 'Add New Learning Entry';
+            showSection('dashboard');
+            
+            // Update nav button
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.nav-btn').classList.add('active');
+        }
+
+        // Dashboard functions
+        function updateDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayEntries = learningEntries.filter(e => e.date === today);
+            const todayHours = todayEntries.reduce((sum, e) => sum + e.time, 0);
+
+            const weekStart = getWeekStart(new Date());
+            const weekEntries = learningEntries.filter(e => {
+                const entryDate = new Date(e.date);
+                return entryDate >= weekStart && entryDate <= new Date();
+            });
+            const weekHours = weekEntries.reduce((sum, e) => sum + e.time, 0);
+
+            const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            const monthEntries = learningEntries.filter(e => {
+                const entryDate = new Date(e.date);
+                return entryDate >= monthStart && entryDate <= new Date();
+            });
+            const monthHours = monthEntries.reduce((sum, e) => sum + e.time, 0);
+
+            const totalHours = learningEntries.reduce((sum, e) => sum + e.time, 0);
+            const currentStreak = calculateStreak();
+
+            document.getElementById('today-hours').textContent = todayHours.toFixed(1);
+            document.getElementById('current-streak').textContent = currentStreak;
+            document.getElementById('week-hours').textContent = weekHours.toFixed(1);
+            document.getElementById('month-hours').textContent = monthHours.toFixed(1);
+            document.getElementById('total-entries').textContent = learningEntries.length;
+            document.getElementById('total-hours').textContent = totalHours.toFixed(1);
+
+            renderRecentEntries();
+        }
+
+        function getWeekStart(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day;
+            return new Date(d.setDate(diff));
+        }
+
+        function calculateStreak() {
+            if (learningEntries.length === 0) return 0;
+
+            const sortedDates = [...new Set(learningEntries.map(e => e.date))].sort().reverse();
+            let streak = 0;
+            let currentDate = new Date();
+
+            for (let i = 0; i < sortedDates.length; i++) {
+                const entryDate = new Date(sortedDates[i]);
+                const daysDiff = Math.floor((currentDate - entryDate) / (1000 * 60 * 60 * 24));
+
+                if (daysDiff === i) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+
+            return streak;
+        }
+
+        function renderRecentEntries() {
+            const recentEntries = learningEntries
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+
+            const recentList = document.getElementById('recent-list');
+            if (recentEntries.length === 0) {
+                recentList.innerHTML = '<p style="color: #666; text-align: center;">No entries yet. Start tracking your learning!</p>';
+                return;
+            }
+
+            recentList.innerHTML = recentEntries.map(entry => `
+                <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4c51bf;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h4 style="color: #4c51bf; margin-bottom: 5px;">${entry.topic}</h4>
+                            <p style="color: #666; font-size: 0.9rem;">${entry.date} • ${entry.type} • ${entry.time}h</p>
+                        </div>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="editEntry(${entry.id})">Edit</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Calendar functions
+        function renderCalendar() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            document.getElementById('calendar-month').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+
+            const calendarGrid = document.getElementById('calendar-grid');
+            calendarGrid.innerHTML = '';
+
+            // Day headers
+            ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.style.fontWeight = 'bold';
+                dayHeader.style.textAlign = 'center';
+                dayHeader.style.padding = '10px';
+                dayHeader.style.background = '#4c51bf';
+                dayHeader.style.color = 'white';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+
+            // Empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.classList.add('calendar-day');
+                calendarGrid.appendChild(emptyDay);
+            }
+
+            // Days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                dayElement.textContent = day;
+
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                // Check if this date has entries
+                const hasEntry = learningEntries.some(e => e.date === dateStr);
+                if (hasEntry) {
+                    dayElement.classList.add('has-entry');
+                }
+
+                // Check if this is today
+                if (dateStr === todayStr) {
+                    dayElement.classList.add('today');
+                }
+
+                dayElement.onclick = () => showDateEntries(dateStr);
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        }
+
+        function showDateEntries(date) {
+            const dateEntries = learningEntries.filter(e => e.date === date);
+            if (dateEntries.length > 0) {
+                const totalTime = dateEntries.reduce((sum, e) => sum + e.time, 0);
+                const entryList = dateEntries.map(e => `• ${e.topic} (${e.time}h - ${e.type})`).join('\n');
+                alert(`Entries for ${date}:\n\nTotal time: ${totalTime.toFixed(1)} hours\n\n${entryList}`);
+            } else {
+                alert(`No learning entries for ${date}`);
+            }
+        }
+
+        // Entries table functions
+        function renderEntries() {
+            const tbody = document.getElementById('entries-tbody');
+            const sortedEntries = learningEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = sortedEntries.map(entry => `
+                <tr>
+                    <td>${entry.date}</td>
+                    <td>${entry.topic}</td>
+                    <td><span style="background: ${entry.type === 'Active' ? '#4c51bf' : '#718096'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">${entry.type}</span></td>
+                    <td>${entry.time}</td>
+                    <td>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; margin-right: 5px;" onclick="editEntry(${entry.id})">Edit</button>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" onclick="deleteEntry(${entry.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function applyFilters() {
+            const topicFilter = document.getElementById('search-topic').value.toLowerCase();
+            const typeFilter = document.getElementById('filter-type').value;
+            const dateFilter = document.getElementById('filter-date').value;
+
+            let filteredEntries = learningEntries;
+
+            if (topicFilter) {
+                filteredEntries = filteredEntries.filter(e => e.topic.toLowerCase().includes(topicFilter));
+            }
+
+            if (typeFilter) {
+                filteredEntries = filteredEntries.filter(e => e.type === typeFilter);
+            }
+
+            if (dateFilter) {
+                filteredEntries = filteredEntries.filter(e => e.date === dateFilter);
+            }
+
+            const tbody = document.getElementById('entries-tbody');
+            const sortedEntries = filteredEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = sortedEntries.map(entry => `
+                <tr>
+                    <td>${entry.date}</td>
+                    <td>${entry.topic}</td>
+                    <td><span style="background: ${entry.type === 'Active' ? '#4c51bf' : '#718096'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">${entry.type}</span></td>
+                    <td>${entry.time}</td>
+                    <td>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; margin-right: 5px;" onclick="editEntry(${entry.id})">Edit</button>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" onclick="deleteEntry(${entry.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function clearFilters() {
+            document.getElementById('search-topic').value = '';
+            document.getElementById('filter-type').value = '';
+            document.getElementById('filter-date').value = '';
+            renderEntries();
+        }
+
+        // Export functions
+        function exportToExcel() {
+            if (learningEntries.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+
+            const ws = XLSX.utils.json_to_sheet(learningEntries.map(entry => ({
+                Date: entry.date,
+                Topic: entry.topic,
+                Type: entry.type,
+                'Time (hours)': entry.time,
+                'What I Learned': entry.learned,
+                'Key Takeaways': entry.takeaways
+            })));
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Learning Entries');
+
+            const fileName = `learning-progress-${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        }
+
+        function exportToCSV() {
+            if (learningEntries.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+
+            const headers = ['Date', 'Topic', 'Type', 'Time (hours)', 'What I Learned', 'Key Takeaways'];
+            const csvContent = [
+                headers.join(','),
+                ...learningEntries.map(entry => [
+                    entry.date,
+                    `"${entry.topic}"`,
+                    entry.type,
+                    entry.time,
+                    `"${entry.learned.replace(/"/g, '""')}"`,
+                    `"${entry.takeaways.replace(/"/g, '""')}"`
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `learning-progress-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function exportToPDF() {
+            if (learningEntries.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(20);
+            doc.text('Learning Progress Report', 20, 30);
+            
+            doc.setFontSize(12);
+            const totalHours = learningEntries.reduce((sum, e) => sum + e.time, 0);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 50);
+            doc.text(`Total Entries: ${learningEntries.length}`, 20, 60);
+            doc.text(`Total Hours: ${totalHours.toFixed(1)}`, 20, 70);
+
+            let yPosition = 90;
+            const sortedEntries = learningEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedEntries.forEach(entry => {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+
+                doc.setFontSize(10);
+                doc.text(`${entry.date} - ${entry.topic} (${entry.type}, ${entry.time}h)`, 20, yPosition);
+                yPosition += 10;
+
+                if (entry.learned) {
+                    const learnedLines = doc.splitTextToSize(`What I learned: ${entry.learned}`, 170);
+                    doc.text(learnedLines, 25, yPosition);
+                    yPosition += learnedLines.length * 5;
+                }
+
+                if (entry.takeaways) {
+                    const takeawayLines = doc.splitTextToSize(`Key takeaways: ${entry.takeaways}`, 170);
+                    doc.text(takeawayLines, 25, yPosition);
+                    yPosition += takeawayLines.length * 5;
+                }
+
+                yPosition += 5;
+            });
+
+            const fileName = `learning-progress-${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(fileName);
+        }
+
+        function importData() {
+            const fileInput = document.getElementById('import-file');
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let importedData = [];
+
+                    if (file.name.endsWith('.csv')) {
+                        const csv = e.target.result;
+                        const lines = csv.split('\n');
+                        const headers = lines[0].split(',');
+                        
+                        for (let i = 1; i < lines.length; i++) {
+                            if (lines[i].trim()) {
+                                const values = lines[i].split(',');
+                                importedData.push({
+                                    id: Date.now() + i,
+                                    date: values[0],
+                                    topic: values[1].replace(/"/g, ''),
+                                    type: values[2],
+                                    time: parseFloat(values[3]),
+                                    learned: values[4] ? values[4].replace(/"/g, '') : '',
+                                    takeaways: values[5] ? values[5].replace(/"/g, '') : ''
+                                });
+                            }
+                        }
+                    } else {
+                        // Excel file
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const sheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[sheetName];
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+                        importedData = jsonData.map((row, index) => ({
+                            id: Date.now() + index,
+                            date: row.Date || row.date || '',
+                            topic: row.Topic || row.topic || '',
+                            type: row.Type || row.type || '',
+                            time: parseFloat(row['Time (hours)'] || row.time || 0),
+                            learned: row['What I Learned'] || row.learned || '',
+                            takeaways: row['Key Takeaways'] || row.takeaways || ''
+                        }));
+                    }
+
+                    if (confirm(`Import ${importedData.length} entries? This will replace all current data.`)) {
+                        learningEntries = importedData;
+                        saveData();
+                        updateDashboard();
+                        renderCalendar();
+                        renderEntries();
+                        alert('Data imported successfully!');
+                    }
+                } catch (error) {
+                    alert('Error importing file. Please check the file format.');
+                }
+            };
+
+            if (file.name.endsWith('.csv')) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
+
+            fileInput.value = '';
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to delete all learning entries? This cannot be undone.')) {
+                learningEntries = [];
+                saveData();
+                updateDashboard();
+                renderCalendar();
+                renderEntries();
+                alert('All data cleared!');
+            }
+        }
+    </script>
+</body>
+</html>
